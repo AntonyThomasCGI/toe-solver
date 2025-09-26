@@ -1,0 +1,15 @@
+[submodule "external/glfw"]
+	path = external/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "external/rocket"]
+	path = external/rocket
+	url = git@github.com:tripleslash/rocket.git
+[submodule "external/glm"]
+	path = external/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "external/stb"]
+	path = external/stb
+	url = git@github.com:nothings/stb.git
+[submodule "external/VulkanmemoryAllocator"]
+	path = external/VulkanmemoryAllocator
+	url = git@github.com:GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
