@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(ant_game VERSION 0.0.1)
+project(toe_solver VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -23,8 +23,6 @@ include_directories(
 add_subdirectory(src/engine)
 
 add_executable(${PROJECT_NAME}
-    src/ant.cpp
-    src/ant.hpp
     src/main.cpp
 )
 
