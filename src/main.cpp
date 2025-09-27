@@ -77,16 +77,16 @@ void drawPlayer(PlayerType playerType, float size, Vector2 postion, Color color)
         {
             float rotation = 30.0 * (M_PI / 180.0);
             Vector2 v1 = {
-                postion.x + radius * cos(rotation),
-                postion.y + radius * sin(rotation)
+                static_cast<float>(postion.x + radius * cos(rotation)),
+                static_cast<float>(postion.y + radius * sin(rotation))
             };
             Vector2 v2 = {
-                postion.x + radius * cos(rotation + 2 *  M_PI / 3),
-                postion.y + radius * sin(rotation + 2 *  M_PI / 3)
+                static_cast<float>(postion.x + radius * cos(rotation + 2 *  M_PI / 3)),
+                static_cast<float>(postion.y + radius * sin(rotation + 2 *  M_PI / 3))
             };
             Vector2 v3 = {
-                postion.x + radius * cos(rotation + 4 *  M_PI / 3),
-                postion.y + radius * sin(rotation + 4 *  M_PI / 3)
+                static_cast<float>(postion.x + radius * cos(rotation + 4 *  M_PI / 3)),
+                static_cast<float>(postion.y + radius * sin(rotation + 4 *  M_PI / 3))
             };
             DrawTriangle(v3, v2, v1, color);
             break;
@@ -110,9 +110,7 @@ void run() {
 
     int boardStartX = (SCREEN_WIDTH - gameBoardWidth) / 2;
     int boardStartY = BOARDER_PADDING;
-
-    float cellSize = gameBoardWidth / EXTERNAL_GRID_WIDTH;
-
+float cellSize = gameBoardWidth / EXTERNAL_GRID_WIDTH;
     float playerSize = cellSize * 0.6;
 
     // Build grid of vectors pointing to the center of the grid position.
@@ -127,9 +125,9 @@ void run() {
 
     SetTargetFPS(60);
 
-    int buttonSize = 40;
-    Rectangle buttonRect0 = {BOARDER_PADDING, (float)boardStartY, buttonSize, buttonSize};
-    Rectangle buttonRect1 = {BOARDER_PADDING, (float)boardStartY + BOARDER_PADDING + buttonSize, buttonSize, buttonSize};
+    float buttonSize = 40;
+    Rectangle buttonRect0 = {(float)BOARDER_PADDING, (float)boardStartY, buttonSize, buttonSize};
+    Rectangle buttonRect1 = {(float)BOARDER_PADDING, (float)boardStartY + BOARDER_PADDING + buttonSize, buttonSize, buttonSize};
 
     PlayerType activePlayer = CROSS;
 
@@ -142,7 +140,9 @@ void run() {
         DrawRectangle(boardStartX, boardStartY, gameBoardWidth, gameBoardHeight, RAYWHITE);
 
         // Game board grid
-        Vector4 bounds = {boardStartX, boardStartY, boardStartX + gameBoardWidth, boardStartY + gameBoardHeight};
+        float boundsZ = boardStartX + gameBoardWidth;
+        float boundsW = boardStartY + gameBoardHeight; 
+        Vector4 bounds = {(float)boardStartX, (float)boardStartY, boundsZ, boundsW};
         drawGrid(bounds, EXTERNAL_GRID_WIDTH, EXTERNAL_GRID_HEIGHT);
 
         //drawPlayer(SQUARE, playerSize, playablePositions[2][2], MAROON);
