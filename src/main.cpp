@@ -64,10 +64,6 @@ void run() {
         // Game board background
         DrawRectangle(boardStartX, boardStartY, gameBoardWidth, gameBoardHeight, RAYWHITE);
 
-        //board->playInCell(player0, 0, 0);
-        //board->playInCell(player0, 1, 0);
-        //board->playInCell(player0, 2, 0);
-
         bool won = board->checkForWin();
         if (won) {
             auto [startPosition, endPosition] = board->getWinPositions();

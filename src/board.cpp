@@ -97,9 +97,9 @@ std::pair<Vector2, Vector2> Board::getWinPositions()
 
 bool Board::checkForWin()
 {
-    //if (cachedWin) {
-    //    return true;
-    //}
+    if (cachedWin) {
+        return true;
+    }
 
     bool win = false;
 
