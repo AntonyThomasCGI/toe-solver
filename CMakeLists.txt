@@ -14,7 +14,14 @@ include_directories(
 
 
 add_executable(${PROJECT_NAME}
-    src/main.cpp src/enums.hpp
+    src/board.cpp
+    src/board.hpp
+    src/cell.cpp
+    src/cell.hpp
+    src/enums.hpp
+    src/main.cpp
+    src/player.cpp
+    src/player.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} raylib)

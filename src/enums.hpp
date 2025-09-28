@@ -7,3 +7,4 @@ enum PlayerType {
     TRIANGLE,
     CIRCLE
 };
+
