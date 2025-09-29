@@ -61,6 +61,8 @@ void run() {
 
     SetTargetFPS(60);
 
+    bool gameWon = false;
+
     while (!WindowShouldClose()) {
         BeginDrawing();
 
@@ -69,15 +71,14 @@ void run() {
         // Game board background
         DrawRectangle(boardStartX, boardStartY, gameBoardWidth, gameBoardHeight, RAYWHITE);
 
-        bool won = board->checkForWin(WIN_TARGET);
-        if (won) {
+        if (gameWon) {
             auto [startPosition, endPosition] = board->getWinPositions();
             DrawLineEx(startPosition, endPosition, 3.0, RED);
         }
 
         // Render the cells inside the board.
         Vector2 mousePos = GetMousePosition();
-        if (!won) {
+        if (!gameWon) {
             auto cells = board->getCells();
             for (auto it = cells.begin(); it != cells.end(); it++) {
                 int i = std::distance(cells.begin(), it);
@@ -100,6 +101,8 @@ void run() {
                             // and change the active player to the next player.
                             // TODO, figure out multiple players.
                             activePlayer = activePlayer == player0 ? player1 : player0;
+
+                            gameWon = board->checkForWin(WIN_TARGET);
                         }
                     }
                 }

@@ -104,7 +104,6 @@ bool Board::checkForWin(unsigned int winTarget)
 
     bool win = false;
 
-
     std::shared_ptr<Player> startPlayer;
     Cell *startCell;
     unsigned int winCount;
