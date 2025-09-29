@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <stdexcept>
 #include <sstream>
 
@@ -95,7 +96,7 @@ std::pair<Vector2, Vector2> Board::getWinPositions()
 }
 
 
-bool Board::checkForWin()
+bool Board::checkForWin(unsigned int winTarget)
 {
     if (cachedWin) {
         return true;
@@ -104,173 +105,199 @@ bool Board::checkForWin()
     bool win = false;
 
 
-    Cell *startCell;
-    Cell *endCell;
     std::shared_ptr<Player> startPlayer;
+    Cell *startCell;
+    unsigned int winCount;
 
-    // Check vertical
+    // Check columns
     for (auto &column : cells) {
         startPlayer = nullptr;
         startCell = nullptr;
-        endCell = nullptr;
-        win = true;
+        winCount = 0;
+
         for (auto &cell : column) {
             if (cell.isPlayable()) {
-                // Row is not completely filled.
-                win = false;
-                break;
+                // Cell has not been played in yet, reset count.
+                startPlayer = nullptr;
+                startCell = nullptr;
+                winCount = 0;
+                continue;
             }
 
             auto thisPlayer = cell.getPlayer();
             if (startCell == nullptr) {
+                // Found the first legit move in this column,
+                // start count from this player.
                 startCell = &cell;
                 startPlayer = thisPlayer;
-                continue;
+                winCount = 1;
+            } else if (thisPlayer != startPlayer) {
+                // Player changed, start count again from this player.
+                startPlayer = thisPlayer;
+                startCell = &cell;
+                winCount = 1;
+            } else {
+                // Same player, increment count.
+                winCount++;
             }
 
-            if (thisPlayer != startPlayer) {
-                // A win requires a row of single player.
-                // TODO, this won't work if board is not 3x3
-                win = false;
-                break;
+            // And finally, check if someone has won.
+            if (winCount == winTarget) {
+                winStart = startCell->getPosition();
+                winEnd = cell.getPosition();
+                cachedWin = true;
+                return true;
             }
-            endCell = &cell;
-        }
-        if (win) {
-            cachedWin = true;
-
-            winStart = startCell->getPosition();
-            winEnd = endCell->getPosition();
-
-            return true;
         }
     }
 
-    // Check horizontal
+    // Check rows
     for (int y = 0; y < height; y++) {
         startPlayer = nullptr;
         startCell = nullptr;
-        endCell = nullptr;
-        win = true;
+        winCount = 0;
+
         for (int x = 0; x < width; x++) {
-            Cell *cell = &cells[x][y];
+            Cell &cell = cells[x][y];
 
-            if (cell->isPlayable()) {
-                // Row is not completely filled.
-                win = false;
-                break;
+            if (cell.isPlayable()) {
+                // Cell has not been played in yet, reset count.
+                startPlayer = nullptr;
+                startCell = nullptr;
+                winCount = 0;
+                continue;
             }
 
-            auto thisPlayer = cell->getPlayer();
+            auto thisPlayer = cell.getPlayer();
             if (startCell == nullptr) {
-                startCell = cell;
+                // Found the first legit move in this row,
+                // start count from this player.
+                startCell = &cell;
                 startPlayer = thisPlayer;
-                continue;
+                winCount = 1;
+            } else if (thisPlayer != startPlayer) {
+                // Player changed, start count again from this player.
+                startPlayer = thisPlayer;
+                startCell = &cell;
+                winCount = 1;
+            } else {
+                // Same player, increment count.
+                winCount++;
             }
 
-            if (thisPlayer != startPlayer) {
-                // A win requires a row of single player.
-                // TODO, this won't work if board is not 3x3
-                win = false;
-                break;
+            // And finally, check if someone has won.
+            if (winCount == winTarget) {
+                winStart = startCell->getPosition();
+                winEnd = cell.getPosition();
+                cachedWin = true;
+                return true;
             }
-            endCell = cell;
-        }
-        if (win) {
-            cachedWin = true;
-
-            winStart = startCell->getPosition();
-            winEnd = endCell->getPosition();
-
-            return true;
         }
     }
 
-    // Diagonal top-left -> bottom-right
-    startPlayer = nullptr;
-    startCell = nullptr;
-    endCell = nullptr;
-    win = true;
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            if (x != y) {
+    // Check diagonal top-left -> bottom-right
+    // Diagonals are grouped by (row - column) = 0, 1, -1, 2, -2 ...
+    // but iterate from negative -> positive
+    for (int d = -((int)height - 1); d <= ((int)width - 1); d++) {
+        startPlayer = nullptr;
+        startCell = nullptr;
+        winCount = 0;
+
+        for (int x = 0; x < width; x++) {
+
+            int y = x - d;
+            if (y < 0 || y >= height) {
+                // Out of bounds.
                 continue;
             }
-            Cell *cell = &cells[x][y];
 
-            if (cell->isPlayable()) {
-                // Row is not completely filled.
-                win = false;
-                break;
+            Cell &cell = cells[x][y];
+
+            if (cell.isPlayable()) {
+                // Cell has not been played in yet, reset count.
+                startPlayer = nullptr;
+                startCell = nullptr;
+                winCount = 0;
+                continue;
             }
 
-            auto thisPlayer = cell->getPlayer();
+            auto thisPlayer = cell.getPlayer();
             if (startCell == nullptr) {
-                startCell = cell;
+                // Found the first legit move in this diagonal,
+                // start count from this player.
+                startCell = &cell;
                 startPlayer = thisPlayer;
-                continue;
+                winCount = 1;
+            } else if (thisPlayer != startPlayer) {
+                // Player changed, start count again from this player.
+                startPlayer = thisPlayer;
+                startCell = &cell;
+                winCount = 1;
+            } else {
+                // Same player, increment count.
+                winCount++;
             }
 
-            if (thisPlayer != startPlayer) {
-                // A win requires a row of single player.
-                // TODO, this won't work if board is not 3x3
-                win = false;
-                break;
+            // And finally, check if someone has won.
+            if (winCount == winTarget) {
+                winStart = startCell->getPosition();
+                winEnd = cell.getPosition();
+                cachedWin = true;
+                return true;
             }
-            endCell = cell;
         }
     }
-    if (win) {
-        cachedWin = true;
 
-        winStart = startCell->getPosition();
-        winEnd = endCell->getPosition();
+    // Check diagonal top-right -> bottom-left
+    // Diagonals are grouped by (row + column) = 0, 1, 2, 3 ...
+    for (int s = 0; s <= width + height - 2; s++) {
+        startPlayer = nullptr;
+        startCell = nullptr;
+        winCount = 0;
 
-        return true;
-    }
+        for (int x = 0; x < width; x++) {
 
-    // Diagonal top-right -> bottom-left
-    startPlayer = nullptr;
-    startCell = nullptr;
-    endCell = nullptr;
-    win = true;
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            if (x != y) {
+            int y = s - x;
+            if (y < 0 || y >= height) {
+                // Out of bounds.
                 continue;
             }
-            int reversedX = width - (x + 1);
-            Cell *cell = &cells[reversedX][y];
 
-            if (cell->isPlayable()) {
-                // Row is not completely filled.
-                win = false;
-                break;
+            Cell &cell = cells[x][y];
+
+            if (cell.isPlayable()) {
+                // Cell has not been played in yet, reset count.
+                startPlayer = nullptr;
+                startCell = nullptr;
+                winCount = 0;
+                continue;
             }
 
-            auto thisPlayer = cell->getPlayer();
+            auto thisPlayer = cell.getPlayer();
             if (startCell == nullptr) {
-                startCell = cell;
+                // Found the first legit move in this diagonal,
+                // start count from this player.
+                startCell = &cell;
                 startPlayer = thisPlayer;
-                continue;
+                winCount = 1;
+            } else if (thisPlayer != startPlayer) {
+                // Player changed, start count again from this player.
+                startPlayer = thisPlayer;
+                startCell = &cell;
+                winCount = 1;
+            } else {
+                // Same player, increment count.
+                winCount++;
             }
 
-            if (thisPlayer != startPlayer) {
-                // A win requires a row of single player.
-                // TODO, this won't work if board is not 3x3
-                win = false;
-                break;
+            // And finally, check if someone has won.
+            if (winCount == winTarget) {
+                winStart = startCell->getPosition();
+                winEnd = cell.getPosition();
+                cachedWin = true;
+                return true;
             }
-            endCell = cell;
         }
-    }
-    if (win) {
-        cachedWin = true;
-
-        winStart = startCell->getPosition();
-        winEnd = endCell->getPosition();
-
-        return true;
     }
 
     return false;

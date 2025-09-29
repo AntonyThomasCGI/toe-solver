@@ -20,7 +20,7 @@ public:
 
     std::vector<std::vector<Cell>> getCells() { return cells; }
 
-    bool checkForWin();
+    bool checkForWin(unsigned int winTarget);
     std::pair<Vector2, Vector2> getWinPositions();
 
 private:

@@ -9,17 +9,22 @@
 #include "raylib.h"
 
 
+// Window size
+const unsigned int SCREEN_WIDTH = 800;
+const unsigned int SCREEN_HEIGHT = 600;
 
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+// Game rules
+const unsigned int EXTERNAL_GRID_WIDTH = 5;
+const unsigned int EXTERNAL_GRID_HEIGHT = 5;
 
-const int EXTERNAL_GRID_WIDTH = 3;
-const int EXTERNAL_GRID_HEIGHT = 3;
+const unsigned int PLAYER_COUNT = 2;
 
-const int PLAYER_COUNT = 2;
+const unsigned int WIN_TARGET = 4;
 
-const int BOARDER_PADDING = 20;
+
+// GUI sizing
+const unsigned int BOARDER_PADDING = 20;
 
 
 void run() {
@@ -64,7 +69,7 @@ void run() {
         // Game board background
         DrawRectangle(boardStartX, boardStartY, gameBoardWidth, gameBoardHeight, RAYWHITE);
 
-        bool won = board->checkForWin();
+        bool won = board->checkForWin(WIN_TARGET);
         if (won) {
             auto [startPosition, endPosition] = board->getWinPositions();
             DrawLineEx(startPosition, endPosition, 3.0, RED);
