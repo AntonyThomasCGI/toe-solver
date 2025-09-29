@@ -133,11 +133,14 @@ void run() {
             }
         }
 
+        Rectangle activePlayerRect;
         if (activePlayer == player0) {
-            DrawRectangleLinesEx(buttonRect0, 1.5, WHITE);
+            activePlayerRect = buttonRect0;
         } else {
-            DrawRectangleLinesEx(buttonRect1, 1.5, WHITE);
+            activePlayerRect = buttonRect1;
         }
+        Rectangle highlightRect = {activePlayerRect.x - 1, activePlayerRect.y - 1, activePlayerRect.width + 2, activePlayerRect.height + 2};
+        DrawRectangleLinesEx(highlightRect, 2, BEIGE);
 
         EndDrawing();
 
