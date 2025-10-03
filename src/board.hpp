@@ -24,8 +24,8 @@ public:
     std::pair<Vector2, Vector2> getWinPositions();
 
 private:
-    unsigned int width;
-    unsigned int height;
+    int width;
+    int height;
     Vector4 bounds;
 
     std::vector<std::vector<Cell>> cells;

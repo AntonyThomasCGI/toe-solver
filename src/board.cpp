@@ -7,7 +7,7 @@
 
 
 Board::Board(unsigned int width, unsigned int height, Vector4 bounds)
-    : width(width), height(height), bounds(bounds)
+    : width(static_cast<int>(width)), height(static_cast<int>(height)), bounds(bounds)
 {
     float cellSizeX = (bounds.z - bounds.x) / width;
     float cellSizeY = (bounds.w - bounds.y) / height;
@@ -197,7 +197,10 @@ bool Board::checkForWin(unsigned int winTarget)
     // Check diagonal top-left -> bottom-right
     // Diagonals are grouped by (row - column) = 0, 1, -1, 2, -2 ...
     // but iterate from negative -> positive
-    for (int d = -((int)height - 1); d <= ((int)width - 1); d++) {
+    std::cout << "top-left -> bottom-right" << std::endl;
+    int numRedundantCells = static_cast<int>(winTarget);
+    for (int d = -(height - numRedundantCells); d <= (width - numRedundantCells); d++) {
+        std::cout << d << std::endl;
         startPlayer = nullptr;
         startCell = nullptr;
         winCount = 0;
@@ -249,7 +252,10 @@ bool Board::checkForWin(unsigned int winTarget)
 
     // Check diagonal top-right -> bottom-left
     // Diagonals are grouped by (row + column) = 0, 1, 2, 3 ...
-    for (int s = 0; s <= width + height - 2; s++) {
+    std::cout << "top-right -> bottom-left" << std::endl;
+    //numRedundantCells = static_cast<int>(winTarget) - 1;
+    for (int s = numRedundantCells - 1; s < width + height - numRedundantCells; s++) {
+        std::cout << s << std::endl;
         startPlayer = nullptr;
         startCell = nullptr;
         winCount = 0;
