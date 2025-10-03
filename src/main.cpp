@@ -26,7 +26,10 @@ const unsigned int PLAYER_COUNT = 2;
 
 const unsigned int WIN_TARGET = 4;
 
-using SOLVER_TYPE = RandomMoveSolver;
+// Vs. bot?
+const bool USE_SOLVER = true;
+
+using SOLVER_CLASS = RandomMoveSolver;
 
 
 // GUI sizing
@@ -70,7 +73,7 @@ void run() {
     bool gameWon = false;
 
     std::future<Move> solverFuture;
-    auto solver = SOLVER_TYPE();
+    auto solver = SOLVER_CLASS();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -85,9 +88,9 @@ void run() {
             DrawLineEx(startPosition, endPosition, 3.0, RED);
         }
 
-        if (activePlayer == player1 && !solverFuture.valid() && !gameWon) {
+        if (USE_SOLVER && activePlayer == player1 && !solverFuture.valid() && !gameWon) {
             // Start solver.
-            solverFuture = std::async(std::launch::async, &SOLVER_TYPE::solve, &solver, board);
+            solverFuture = std::async(std::launch::async, &SOLVER_CLASS::solve, &solver, board);
         }
 
         if (solverFuture.valid() && solverFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
