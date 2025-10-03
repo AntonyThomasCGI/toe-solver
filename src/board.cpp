@@ -74,6 +74,18 @@ void Board::drawPlayers()
     }
 }
 
+bool Board::canPlayInCell(unsigned int x, unsigned int y)
+{
+    if (width <= x || height <= y) {
+        std::stringstream ss;
+        ss << "WARNING: canPlayInCell received out of bounds coordinate: " << x << ", " << y;
+        std::cout << ss.str() << std::endl;
+        return false;
+    }
+
+    return cells[x][y].isPlayable();
+}
+
 
 void Board::playInCell(std::shared_ptr<Player> player, unsigned int x, unsigned int y)
 {
@@ -197,10 +209,8 @@ bool Board::checkForWin(unsigned int winTarget)
     // Check diagonal top-left -> bottom-right
     // Diagonals are grouped by (row - column) = 0, 1, -1, 2, -2 ...
     // but iterate from negative -> positive
-    std::cout << "top-left -> bottom-right" << std::endl;
     int numRedundantCells = static_cast<int>(winTarget);
     for (int d = -(height - numRedundantCells); d <= (width - numRedundantCells); d++) {
-        std::cout << d << std::endl;
         startPlayer = nullptr;
         startCell = nullptr;
         winCount = 0;
@@ -252,10 +262,8 @@ bool Board::checkForWin(unsigned int winTarget)
 
     // Check diagonal top-right -> bottom-left
     // Diagonals are grouped by (row + column) = 0, 1, 2, 3 ...
-    std::cout << "top-right -> bottom-left" << std::endl;
     //numRedundantCells = static_cast<int>(winTarget) - 1;
     for (int s = numRedundantCells - 1; s < width + height - numRedundantCells; s++) {
-        std::cout << s << std::endl;
         startPlayer = nullptr;
         startCell = nullptr;
         winCount = 0;

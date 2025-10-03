@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/player.cpp
     src/player.hpp
+    src/solvers/random_move.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} raylib)

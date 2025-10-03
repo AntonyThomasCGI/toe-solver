@@ -1,12 +1,16 @@
 
 
+#include <future>
 #include <iostream>
 #include <memory>
+#include <thread>
+
+#include "raylib.h"
 
 #include "board.hpp"
 #include "player.hpp"
+#include "solvers/random_move.hpp"
 
-#include "raylib.h"
 
 
 // Window size
@@ -21,6 +25,8 @@ const unsigned int EXTERNAL_GRID_HEIGHT = 5;
 const unsigned int PLAYER_COUNT = 2;
 
 const unsigned int WIN_TARGET = 4;
+
+using solver = RandomMoveSolver;
 
 
 // GUI sizing
@@ -45,7 +51,7 @@ void run() {
     float boardEndY = boardStartY + gameBoardHeight;
 
     Vector4 boardBounds = {boardStartX, boardStartY, boardEndX, boardEndY};
-    std::unique_ptr<Board> board = std::make_unique<Board>(
+    std::shared_ptr<Board> board = std::make_shared<Board>(
         EXTERNAL_GRID_WIDTH, EXTERNAL_GRID_HEIGHT, boardBounds
     );
 
@@ -63,6 +69,8 @@ void run() {
 
     bool gameWon = false;
 
+    std::future<Move> solverFuture;
+
     while (!WindowShouldClose()) {
         BeginDrawing();
 
@@ -74,6 +82,26 @@ void run() {
         if (gameWon) {
             auto [startPosition, endPosition] = board->getWinPositions();
             DrawLineEx(startPosition, endPosition, 3.0, RED);
+        }
+
+        if (activePlayer == player1 && !solverFuture.valid() && !gameWon) {
+            // Start solver.
+            solverFuture = std::async(std::launch::async, solver::solve, board);
+        }
+
+        if (solverFuture.valid() && solverFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
+            // Solver complete.
+            Move move = solverFuture.get();
+
+            std::cout << "Got solver move: " << move.first << ", " << move.second << std::endl;
+            // Play in the square!
+            board->playInCell(activePlayer, move.first, move.second);
+
+            // and change the active player to the next player.
+            // TODO, figure out multiple players.
+            activePlayer = activePlayer == player0 ? player1 : player0;
+
+            gameWon = board->checkForWin(WIN_TARGET);
         }
 
         // Render the cells inside the board.

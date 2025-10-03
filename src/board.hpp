@@ -16,12 +16,16 @@ public:
     void drawGrid();
     void drawPlayers();
 
+    bool canPlayInCell(unsigned int x, unsigned int y);
     void playInCell(std::shared_ptr<Player> player, unsigned int x, unsigned int y);
 
     std::vector<std::vector<Cell>> getCells() { return cells; }
 
     bool checkForWin(unsigned int winTarget);
     std::pair<Vector2, Vector2> getWinPositions();
+
+    int getWidth() { return width; }
+    int getHeight() { return height; }
 
 private:
     int width;
