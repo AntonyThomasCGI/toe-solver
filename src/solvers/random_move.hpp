@@ -5,18 +5,15 @@
 #include <thread>
 #include <utility>
 
-#include "../board.hpp"
-
-
-typedef std::pair<int, int> Move;
+#include "abstract.hpp"
 
 
 // Create a random move.
-class RandomMoveSolver
+class RandomMoveSolver : public AbstractSolver
 {
 public:
 
-    static Move solve(std::shared_ptr<Board> board) {
+    Move solve(std::shared_ptr<Board> board) override {
         // Simulate big think
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 

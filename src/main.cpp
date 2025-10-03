@@ -26,7 +26,7 @@ const unsigned int PLAYER_COUNT = 2;
 
 const unsigned int WIN_TARGET = 4;
 
-using solver = RandomMoveSolver;
+using SOLVER_TYPE = RandomMoveSolver;
 
 
 // GUI sizing
@@ -70,6 +70,7 @@ void run() {
     bool gameWon = false;
 
     std::future<Move> solverFuture;
+    auto solver = SOLVER_TYPE();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -86,7 +87,7 @@ void run() {
 
         if (activePlayer == player1 && !solverFuture.valid() && !gameWon) {
             // Start solver.
-            solverFuture = std::async(std::launch::async, solver::solve, board);
+            solverFuture = std::async(std::launch::async, &SOLVER_TYPE::solve, &solver, board);
         }
 
         if (solverFuture.valid() && solverFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
