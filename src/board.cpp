@@ -21,7 +21,7 @@ Board::Board(unsigned int width, unsigned int height, Vector4 bounds)
             float yPos = j * cellSizeY + bounds.y;
 
             Rectangle cellRect = {xPos, yPos, cellSizeX, cellSizeY};
-            Cell cell = Cell(cellRect);
+            Cell cell = Cell(cellRect, i, j);
 
             cells[i].push_back(cell);
         }

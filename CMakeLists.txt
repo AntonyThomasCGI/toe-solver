@@ -18,11 +18,12 @@ add_executable(${PROJECT_NAME}
     src/board.hpp
     src/cell.cpp
     src/cell.hpp
-    src/enums.hpp
+    src/datatypes.hpp
     src/main.cpp
     src/player.cpp
     src/player.hpp
     src/solvers/abstract.hpp
+    src/solvers/play_close.hpp
     src/solvers/random_move.hpp
 )
 

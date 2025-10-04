@@ -7,8 +7,8 @@
 #include "player.hpp"
 
 
-Player::Player(PlayerType playerType, Color color)
-    : playerType(playerType), color(color)
+Player::Player(std::string id, PlayerType playerType, Color color)
+    : id(id), playerType(playerType), color(color)
 {
 
 }

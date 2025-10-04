@@ -1,5 +1,4 @@
 
-
 #include <future>
 #include <iostream>
 #include <memory>
@@ -10,6 +9,8 @@
 #include "board.hpp"
 #include "player.hpp"
 #include "solvers/random_move.hpp"
+#include "solvers/play_close.hpp"
+#include "datatypes.hpp"
 
 
 
@@ -29,7 +30,7 @@ const unsigned int WIN_TARGET = 4;
 // Vs. bot?
 const bool USE_SOLVER = true;
 
-using SOLVER_CLASS = RandomMoveSolver;
+using SOLVER_CLASS = PlayCloseSolver;
 
 
 // GUI sizing
@@ -58,8 +59,8 @@ void run() {
         EXTERNAL_GRID_WIDTH, EXTERNAL_GRID_HEIGHT, boardBounds
     );
 
-    std::shared_ptr<Player> player0 = std::make_shared<Player>(CROSS, MAROON);
-    std::shared_ptr<Player> player1 = std::make_shared<Player>(NAUGHT, DARKGREEN);
+    std::shared_ptr<Player> player0 = std::make_shared<Player>("player0", CROSS, MAROON);
+    std::shared_ptr<Player> player1 = std::make_shared<Player>("player1", NAUGHT, DARKGREEN);
 
     auto activePlayer = player0;
 
@@ -72,7 +73,7 @@ void run() {
 
     bool gameWon = false;
 
-    std::future<Move> solverFuture;
+    std::future<Coordinate> solverFuture;
     auto solver = SOLVER_CLASS();
 
     while (!WindowShouldClose()) {
@@ -90,16 +91,15 @@ void run() {
 
         if (USE_SOLVER && activePlayer == player1 && !solverFuture.valid() && !gameWon) {
             // Start solver.
-            solverFuture = std::async(std::launch::async, &SOLVER_CLASS::solve, &solver, board);
+            solverFuture = std::async(std::launch::async, &SOLVER_CLASS::runSolve, &solver, board);
         }
 
         if (solverFuture.valid() && solverFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
             // Solver complete.
-            Move move = solverFuture.get();
+            Coordinate move = solverFuture.get();
 
-            std::cout << "Got solver move: " << move.first << ", " << move.second << std::endl;
             // Play in the square!
-            board->playInCell(activePlayer, move.first, move.second);
+            board->playInCell(activePlayer, move.x, move.y);
 
             // and change the active player to the next player.
             // TODO, figure out multiple players.

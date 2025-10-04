@@ -4,8 +4,8 @@
 #include "cell.hpp"
 
 
-Cell::Cell(Rectangle rect)
-    : rect(rect)
+Cell::Cell(Rectangle rect, int x, int y)
+    : rect(rect), coordinate({x, y})
 {
     float posX, posY;
     posX = rect.x + rect.width / 2.0;
