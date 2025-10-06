@@ -23,6 +23,7 @@ add_executable(${PROJECT_NAME}
     src/player.cpp
     src/player.hpp
     src/solvers/abstract.hpp
+    src/solvers/block_connections.hpp
     src/solvers/play_close.hpp
     src/solvers/random_move.hpp
 )

@@ -10,6 +10,7 @@
 #include "player.hpp"
 #include "solvers/random_move.hpp"
 #include "solvers/play_close.hpp"
+#include "solvers/block_connections.hpp"
 #include "datatypes.hpp"
 
 
@@ -30,7 +31,7 @@ const unsigned int WIN_TARGET = 4;
 // Vs. bot?
 const bool USE_SOLVER = true;
 
-using SOLVER_CLASS = PlayCloseSolver;
+using SOLVER_CLASS = BlockConnectionsSolver;
 
 
 // GUI sizing

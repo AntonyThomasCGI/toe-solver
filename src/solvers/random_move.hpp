@@ -18,7 +18,7 @@ private:
 
     Coordinate solve(std::shared_ptr<Board> board) override {
         // Simulate big think
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
         std::random_device dev;
         std::mt19937 rng(dev());
