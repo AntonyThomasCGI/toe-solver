@@ -92,7 +92,7 @@ void run() {
 
         if (USE_SOLVER && activePlayer == player1 && !solverFuture.valid() && !gameWon) {
             // Start solver.
-            solverFuture = std::async(std::launch::async, &SOLVER_CLASS::runSolve, &solver, board);
+            solverFuture = std::async(std::launch::async, &SOLVER_CLASS::runSolve, &solver, board, WIN_TARGET);
         }
 
         if (solverFuture.valid() && solverFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {

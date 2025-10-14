@@ -19,10 +19,10 @@ class AbstractSolver
 public:
 
     /** Wrapper around solve method to provide timing log information. */
-    Coordinate runSolve(std::shared_ptr<Board> board) {
+    Coordinate runSolve(std::shared_ptr<Board> board, unsigned int winTarget) {
         auto start = std::chrono::high_resolution_clock::now();
 
-        auto result = solve(board);
+        auto result = solve(board, winTarget);
 
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -32,8 +32,6 @@ public:
         return result;
     }
 
-private:
-
     /** solve takes a board as input and returns a move. */
-    virtual Coordinate solve(std::shared_ptr<Board> board) = 0;
+    virtual Coordinate solve(std::shared_ptr<Board> board, unsigned int winTarget) = 0;
 };

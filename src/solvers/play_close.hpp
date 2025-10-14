@@ -9,9 +9,9 @@
  */
 class PlayCloseSolver : public AbstractSolver
 {
-private:
+public:
 
-    Coordinate solve(std::shared_ptr<Board> board) {
+    Coordinate solve(std::shared_ptr<Board> board, unsigned int winTarget) {
 
         auto cells = board->getCells();
 

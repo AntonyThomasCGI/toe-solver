@@ -14,9 +14,9 @@
  */
 class RandomMoveSolver : public AbstractSolver
 {
-private:
+public:
 
-    Coordinate solve(std::shared_ptr<Board> board) override {
+    Coordinate solve(std::shared_ptr<Board> board, unsigned int winTarget) override {
         // Simulate big think
         //std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
